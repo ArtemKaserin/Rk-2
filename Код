@@ -1,0 +1,76 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+class Animal {
+protected:
+    std::string name;
+    std::string species;
+
+public:
+    Animal(const std::string& name, const std::string& species) : name(name), species(species) {}
+
+    void SetName(const string& s){
+        name = s;
+    }
+
+    virtual void display() const {
+        std::cout << "Name: " << name << std::endl;
+        std::cout << "Species: " << species << std::endl;
+    }
+};
+
+class Bird : public Animal {
+protected:
+    double wingspan;
+
+public:
+    Bird(const std::string& name, const std::string& species, double wingspan): Animal(name, species), wingspan(wingspan) {}
+
+    void display() const override {
+        Animal::display();
+        std::cout << "Wingspan: " << wingspan << std::endl;
+    }
+};
+
+class Mammal : public Animal {
+protected:
+    std::string furType;
+
+public:
+    Mammal(const std::string& name, const std::string& species, const std::string& furType)
+        : Animal(name, species), furType(furType) {}
+
+    void display() const override {
+        Animal::display();
+        std::cout << "Fur Type: " << furType << std::endl;
+    }
+};
+
+void modifyAnimal(Animal* animal) {
+    animal->SetName("Modified Animal");
+}
+
+int main() {
+    std::vector<Animal*> animals;
+    animals.push_back(new Bird("Eagle", "Bird", 2.5));
+    animals.push_back(new Mammal("Tiger", "Mammal", "Short"));
+    animals.push_back(new Bird("Penguin", "Bird", 1.0));
+    animals.push_back(new Mammal("Bear", "Mammal", "Long"));
+
+    for (auto it = animals.begin(); it != animals.end(); ++it) {
+        (*it)->display();
+        std::cout << std::endl;
+    }
+
+    modifyAnimal(animals[0]);
+
+    animals[0]->display();
+
+    for (auto animal : animals) {
+        delete animal;
+    }
+
+    return 0;
+}
